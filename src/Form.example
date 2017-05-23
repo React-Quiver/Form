@@ -1,0 +1,18 @@
+<Form
+  form = {{
+        password: {
+          component: 'TextField',
+          key: `password`,
+          type: 'password',
+          labelText: 'New Password',
+          hintText: 'Enter your new Password',
+        },
+        passwordRetype: {
+          component: 'TextField',
+          key: `passwordRetype`,
+          type: 'password',
+          labelText: 'New Password',
+          hintText: 'Retype your new Password',
+        },
+      }}
+/>
