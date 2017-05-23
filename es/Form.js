@@ -135,13 +135,11 @@ var Form = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _props2 = this.props,
-          title = _props2.title,
-          muiTheme = _props2.muiTheme;
+      var title = this.props.title;
 
       return React.createElement(
         MuiThemeProvider,
-        { muiTheme: muiTheme },
+        { muiTheme: this.context.muiTheme },
         React.createElement(
           'div',
           null,
@@ -160,9 +158,11 @@ var Form = function (_Component) {
 }(Component);
 
 Form.propTypes = {
-  muiTheme: PropTypes.object,
   title: PropTypes.string,
   form: PropTypes.object,
   save: PropTypes.func
+};
+Form.contextTypes = {
+  muiTheme: PropTypes.object.isRequired
 };
 export default Form;

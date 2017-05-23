@@ -13,10 +13,13 @@ import styles from './styles';
 
 export default class Form extends Component {
   static propTypes = {
-    muiTheme: PropTypes.object,
     title: PropTypes.string,
     form: PropTypes.object,
     save: PropTypes.func,
+  };
+
+  static contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
   };
 
   getSelectField(k, item) {
@@ -123,9 +126,9 @@ export default class Form extends Component {
   }
 
   render() {
-    const { title, muiTheme } = this.props;
+    const { title } = this.props;
     return (
-      <MuiThemeProvider muiTheme={muiTheme}>
+      <MuiThemeProvider muiTheme={this.context.muiTheme}>
         <div>
           {title ? <h3>{title}</h3> : null}
           {this.generateFormFields()}
