@@ -7,9 +7,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 import React, { Component, PropTypes } from 'react';
-import pureRender from 'pure-render-decorator';
 
 // material-ui
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import SelectField from 'material-ui/SelectField';
@@ -73,53 +73,55 @@ var Form = function (_Component) {
       var _loop = function _loop(k) {
         if (form.hasOwnProperty(k)) {
           var field = form[k];
-          switch (field.component) {
-            case 'TextField':
-              JSX.push(React.createElement(TextField, {
-                disabled: field.disabled,
-                key: field.key,
-                type: field.type,
-                floatingLabelFixed: true,
-                floatingLabelText: field.labelText,
-                hintText: field.hintText,
-                value: field.value,
-                onChange: function onChange(e) {
-                  return save(k, e.target.value);
-                },
-                errorText: field.error
-              }));
-              JSX.push(React.createElement('br', null));
-              break;
-            case 'SelectField':
-              JSX.push(_this2.getSelectField(k, field));
-              break;
-            case 'Checkbox':
-              JSX.push(React.createElement('br', null));
-              JSX.push(React.createElement(Checkbox, {
-                key: field.key,
-                style: { width: '100%' },
-                label: field.labelText,
-                value: field.value,
-                onCheck: function onCheck(e, value) {
-                  save(k, value);
-                }
-              }));
-              break;
-            case 'Toggle':
-              JSX.push(React.createElement('br', null));
-              JSX.push(React.createElement(Toggle, {
-                key: field.key,
-                label: field.labelText,
-                disabled: field.disabled,
-                labelPosition: 'right',
-                value: field.value,
-                style: styles.toggle,
-                onToggle: function onToggle(event, value) {
-                  save(k, value);
-                }
-              }));
-              break;
-            default:
+          if (field.display !== false) {
+            switch (field.component) {
+              case 'TextField':
+                JSX.push(React.createElement(TextField, {
+                  disabled: field.disabled,
+                  key: field.key,
+                  type: field.type,
+                  floatingLabelFixed: true,
+                  floatingLabelText: field.labelText,
+                  hintText: field.hintText,
+                  value: field.value,
+                  onChange: function onChange(e) {
+                    return save(k, e.target.value);
+                  },
+                  errorText: field.error
+                }));
+                JSX.push(React.createElement('br', null));
+                break;
+              case 'SelectField':
+                JSX.push(_this2.getSelectField(k, field));
+                break;
+              case 'Checkbox':
+                JSX.push(React.createElement('br', null));
+                JSX.push(React.createElement(Checkbox, {
+                  key: field.key,
+                  style: { width: '100%' },
+                  label: field.labelText,
+                  value: field.value,
+                  onCheck: function onCheck(e, value) {
+                    save(k, value);
+                  }
+                }));
+                break;
+              case 'Toggle':
+                JSX.push(React.createElement('br', null));
+                JSX.push(React.createElement(Toggle, {
+                  key: field.key,
+                  label: field.labelText,
+                  disabled: field.disabled,
+                  labelPosition: 'right',
+                  value: field.value,
+                  style: styles.toggle,
+                  onToggle: function onToggle(event, value) {
+                    save(k, value);
+                  }
+                }));
+                break;
+              default:
+            }
           }
         }
       };
@@ -136,14 +138,18 @@ var Form = function (_Component) {
       var title = this.props.title;
 
       return React.createElement(
-        'div',
-        null,
-        title ? React.createElement(
-          'h3',
+        MuiThemeProvider,
+        { muiTheme: this.context.muiTheme },
+        React.createElement(
+          'div',
           null,
-          title
-        ) : null,
-        this.generateFormFields()
+          title ? React.createElement(
+            'h3',
+            null,
+            title
+          ) : null,
+          this.generateFormFields()
+        )
       );
     }
   }]);
@@ -155,5 +161,8 @@ Form.propTypes = {
   title: PropTypes.string,
   form: PropTypes.object,
   save: PropTypes.func
+};
+Form.contextTypes = {
+  muiTheme: PropTypes.object.isRequired
 };
 export default Form;
