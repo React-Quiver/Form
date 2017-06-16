@@ -1,3 +1,5 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -10,6 +12,7 @@ import React, { Component, PropTypes } from 'react';
 
 // material-ui
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import DatePicker from 'material-ui/DatePicker';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import SelectField from 'material-ui/SelectField';
@@ -49,6 +52,7 @@ var Form = function (_Component) {
       return React.createElement(
         SelectField,
         {
+          style: { marginTop: -15, width: '100%' },
           key: item._key,
           value: item.value,
           onChange: function onChange(event, index, value) {
@@ -58,6 +62,24 @@ var Form = function (_Component) {
         },
         JSX
       );
+    }
+  }, {
+    key: 'getColorStyle',
+    value: function getColorStyle(color) {
+      if (color) {
+        return {
+          hintStyle: { color: color },
+          inputStyle: { color: color },
+          floatingLabelStyle: { color: color },
+          floatingLabelFocusStyle: { color: color },
+          style: { color: color },
+          textareaStyle: { color: color },
+          underlineFocusStyle: { color: color, background: color },
+          underlineStyle: { color: color, background: color }
+        };
+      }
+
+      return {};
     }
   }, {
     key: 'generateFormFields',
@@ -75,50 +97,79 @@ var Form = function (_Component) {
           var field = form[k];
           if (field.display !== false) {
             switch (field.component) {
+              case 'DatePicker':
+                JSX.push(React.createElement(
+                  'div',
+                  { style: styles.container, key: field.key },
+                  React.createElement(DatePicker, _extends({}, _this2.getColorStyle(_this2.props.color), {
+                    value: field.value,
+                    hintText: field.hintText,
+                    floatingLabelFixed: true,
+                    floatingLabelText: field.labelText,
+                    onChange: function onChange(e, date) {
+                      return save(k, date);
+                    },
+                    style: { marginTop: -20, width: '100%', color: 'white' }
+                  }))
+                ));
+                break;
               case 'TextField':
-                JSX.push(React.createElement(TextField, {
-                  disabled: field.disabled,
-                  key: field.key,
-                  type: field.type,
-                  floatingLabelFixed: true,
-                  floatingLabelText: field.labelText,
-                  hintText: field.hintText,
-                  value: field.value,
-                  onChange: function onChange(e) {
-                    return save(k, e.target.value);
-                  },
-                  errorText: field.error
-                }));
-                JSX.push(React.createElement('br', null));
+                JSX.push(React.createElement(
+                  'div',
+                  { style: styles.container, key: field.key },
+                  React.createElement(TextField, _extends({}, _this2.getColorStyle(_this2.props.color), {
+                    disabled: field.disabled,
+                    type: field.type,
+                    floatingLabelFixed: true,
+                    floatingLabelText: field.labelText,
+                    hintText: field.hintText,
+                    value: field.value,
+                    style: { marginTop: -20, width: '100%', color: 'white' },
+                    onChange: function onChange(e) {
+                      return save(k, e.target.value);
+                    },
+                    errorText: field.error
+                  }))
+                ));
                 break;
               case 'SelectField':
-                JSX.push(_this2.getSelectField(k, field));
+                JSX.push(React.createElement(
+                  'div',
+                  { style: styles.container, key: field.key },
+                  _this2.getSelectField(k, field)
+                ));
                 break;
               case 'Checkbox':
-                JSX.push(React.createElement('br', null));
-                JSX.push(React.createElement(Checkbox, {
-                  key: field.key,
-                  style: { width: '100%' },
-                  label: field.labelText,
-                  value: field.value,
-                  onCheck: function onCheck(e, value) {
-                    save(k, value);
-                  }
-                }));
+                JSX.push(React.createElement(
+                  'div',
+                  { style: styles.container, key: field.key },
+                  React.createElement(Checkbox, {
+                    key: field.key,
+                    style: { width: '100%' },
+                    label: field.labelText,
+                    value: field.value,
+                    onCheck: function onCheck(e, value) {
+                      save(k, value);
+                    }
+                  })
+                ));
                 break;
               case 'Toggle':
-                JSX.push(React.createElement('br', null));
-                JSX.push(React.createElement(Toggle, {
-                  key: field.key,
-                  label: field.labelText,
-                  disabled: field.disabled,
-                  labelPosition: 'right',
-                  value: field.value,
-                  style: styles.toggle,
-                  onToggle: function onToggle(event, value) {
-                    save(k, value);
-                  }
-                }));
+                JSX.push(React.createElement(
+                  'div',
+                  { style: styles.container, key: field.key },
+                  React.createElement(Toggle, {
+                    key: field.key,
+                    label: field.labelText,
+                    disabled: field.disabled,
+                    labelPosition: 'right',
+                    value: field.value,
+                    style: styles.toggle,
+                    onToggle: function onToggle(event, value) {
+                      save(k, value);
+                    }
+                  })
+                ));
                 break;
               default:
             }
@@ -160,7 +211,8 @@ var Form = function (_Component) {
 Form.propTypes = {
   title: PropTypes.string,
   form: PropTypes.object,
-  save: PropTypes.func
+  save: PropTypes.func,
+  color: PropTypes.string
 };
 Form.contextTypes = {
   muiTheme: PropTypes.object.isRequired

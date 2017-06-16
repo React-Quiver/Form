@@ -1,6 +1,10 @@
 export default {
-  div: {
-    padding: 25,
-    margin: 25,
+  toggle: {
+    marginBottom: 16,
+  },
+  container: {
+    height: 40,
+    margin: 4,
+    padding: 10,
   },
 };
